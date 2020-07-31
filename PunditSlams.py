@@ -1,6 +1,9 @@
 import tweepy
 import requests
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 NEWSAPI_URL = 'https://newsapi.org/v2/everything'
 
@@ -23,8 +26,8 @@ if __name__ == '__main__':
         print(article["title"])
 
     # Authenticate to Twitter
-    auth = tweepy.OAuthHandler("<key>", "<key>")
-    auth.set_access_token("<key>", "<key>")
+    auth = tweepy.OAuthHandler(os.getenv("API_KEY"), os.getenv("API_SECRET_KEY"))
+    auth.set_access_token(os.getenv("ACCESS_TOKEN"), os.getenv("ACCESS_TOKEN_SECRET"))
 
     # Create API object
     api = tweepy.API(auth)
