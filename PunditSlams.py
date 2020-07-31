@@ -1,6 +1,7 @@
 import tweepy
 import requests
 
+import api_keys
 
 NEWSAPI_URL = 'https://newsapi.org/v2/everything'
 
@@ -18,13 +19,13 @@ def articles(query, *, start_date, api_key, sort_by='popularity'):
 
 
 if __name__ == '__main__':
-    slam_articles = articles('slams', start_date='2020-07-28', api_key='<api>')
+    slam_articles = articles('slams', start_date='2020-07-28', api_key=api_keys.newsapi)
     for article in slam_articles:
         print(article["title"])
 
     # Authenticate to Twitter
-    auth = tweepy.OAuthHandler("<key>", "<key>")
-    auth.set_access_token("<key>", "<key>")
+    auth = tweepy.OAuthHandler(api_keys.twitter_auth_a, api_keys.twitter_auth_b)
+    auth.set_access_token(api_keys.twitter_access_a, api_keys.twitter_access_b)
 
     # Create API object
     api = tweepy.API(auth)
