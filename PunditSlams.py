@@ -1,7 +1,9 @@
 import tweepy
 import requests
+import os
+from dotenv import load_dotenv
 
-import api_keys
+load_dotenv()
 
 NEWSAPI_URL = 'https://newsapi.org/v2/everything'
 
@@ -20,8 +22,8 @@ def articles(query, *, start_date, api_key, sort_by='popularity'):
 
 def init_tweety():
     # Authenticate to Twitter
-    auth = tweepy.OAuthHandler(api_keys.twitter["CONSUMER_KEY"], api_keys.twitter["CONSUMER_KEY"])
-    auth.set_access_token(api_keys.twitter["CONSUMER_KEY"], api_keys.twitter["CONSUMER_KEY"])
+    auth = tweepy.OAuthHandler(os.getenv("API_KEY"), os.getenv("API_SECRET_KEY"))
+    auth.set_access_token(os.getenv("ACCESS_TOKEN"), os.getenv("ACCESS_TOKEN_SECRET"))
 
     # Create API object
     api = tweepy.API(auth)
