@@ -3,6 +3,9 @@ import requests
 import os
 from dotenv import load_dotenv
 
+from datetime import date
+from time import sleep
+
 load_dotenv()
 
 NEWSAPI_URL = 'https://newsapi.org/v2/everything'
@@ -22,8 +25,10 @@ def articles(query, *, start_date, api_key, sort_by='popularity'):
 
 def init_tweety():
     # Authenticate to Twitter
-    auth = tweepy.OAuthHandler(os.getenv("API_KEY"), os.getenv("API_SECRET_KEY"))
-    auth.set_access_token(os.getenv("ACCESS_TOKEN"), os.getenv("ACCESS_TOKEN_SECRET"))
+    auth = tweepy.OAuthHandler(
+        os.getenv("API_KEY"), os.getenv("API_SECRET_KEY"))
+    auth.set_access_token(os.getenv("ACCESS_TOKEN"),
+                          os.getenv("ACCESS_TOKEN_SECRET"))
 
     # Create API object
     api = tweepy.API(auth)
@@ -38,10 +43,13 @@ def init_tweety():
 
 
 if __name__ == '__main__':
-    slam_articles = articles('slams', start_date='2020-07-28', api_key=os.getenv("NEWSAPI_KEY"))
-    for article in slam_articles:
-        print(article["title"])
-
     tweety = init_tweety()
-    # Create a tweet
-    #tweety.update_status("Hello Tweepy")
+
+    while(True):
+        today = date.today()
+        slam_articles = articles('slams', start_date=today, api_key=os.getenv("NEWSAPI_KEY"))
+        for article in slam_articles:
+            print(article["title"])
+            # Create a tweet
+            # tweety.update_status("Hello Tweepy")
+            sleep(30)  # Check every 30 seconds
