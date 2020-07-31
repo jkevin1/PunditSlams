@@ -38,7 +38,7 @@ def articles(query, *, start_date, api_key, sort_by='popularity', language='en')
         
         # TODO branch based on 'status' field of response
         page_articles = response_json.get('articles')
-        if (page_articles == None):
+        if (page_articles == None or len(page_articles) == 0):
             break
         
         articles.extend(page_articles)
@@ -74,6 +74,7 @@ if __name__ == '__main__':
         slam_articles = articles('slams', start_date=today, api_key=os.getenv("NEWSAPI_KEY"))
         for article in slam_articles:
             print(article["title"])
-            # Create a tweet
-            # tweety.update_status("Hello Tweepy")
-            sleep(30)  # Check every 30 seconds
+
+        # Create a tweet
+        # tweety.update_status("Hello Tweepy")
+        sleep(30)  # Check every 30 seconds
