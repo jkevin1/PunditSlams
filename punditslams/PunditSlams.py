@@ -22,7 +22,7 @@ def articles(query, *, start_date, api_key, sort_by='popularity', language='en')
         # Some useful parameters:
         # - q: content query,
         # - domains: comma-separated domains
-        # - excludeDomains: 
+        # - excludeDomains:
         # - to: end date
         # - pageSize: defaults to 20, maximum is 100
         params = {
@@ -35,12 +35,12 @@ def articles(query, *, start_date, api_key, sort_by='popularity', language='en')
         }
         response = requests.get(NEWSAPI_URL, params=params)
         response_json = response.json()
-        
+
         # TODO branch based on 'status' field of response
         page_articles = response_json.get('articles')
         if (page_articles == None or len(page_articles) == 0):
             break
-        
+
         articles.extend(page_articles)
         page_count = page_count + 1
 
