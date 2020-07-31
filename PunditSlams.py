@@ -38,7 +38,7 @@ def init_tweety():
 
 
 if __name__ == '__main__':
-    slam_articles = articles('slams', start_date='2020-07-28', api_key=api_keys.newsapi["KEY"])
+    slam_articles = articles('slams', start_date='2020-07-28', api_key=os.getenv("NEWSAPI_KEY"))
     for article in slam_articles:
         print(article["title"])
 
