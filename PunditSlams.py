@@ -8,16 +8,40 @@ load_dotenv()
 NEWSAPI_URL = 'https://newsapi.org/v2/everything'
 
 
-def articles(query, *, start_date, api_key, sort_by='popularity'):
-    params = {
-        'qInTitle': query,
-        'from': start_date,
-        'sortBy': sort_by,
-        'apiKey': api_key
-    }
-    response = requests.get(NEWSAPI_URL, params=params)
-    response_json = response.json()
-    return response_json.get('articles')
+# See 'Request Parameters' section https://newsapi.org/docs/endpoints/everything
+def articles(query, *, start_date, api_key, sort_by='popularity', language='en'):
+
+    articles = []
+    page_count = 1
+
+    # Loops are for chads and jocks
+    while True:
+        # Some useful parameters:
+        # - q: content query,
+        # - domains: comma-separated domains
+        # - excludeDomains: 
+        # - to: end date
+        # - pageSize: defaults to 20, maximum is 100
+        params = {
+            'qInTitle': query,
+            'from': start_date,
+            'language': language,
+            'sortBy': sort_by,
+            'page': page_count,
+            'apiKey': api_key,
+        }
+        response = requests.get(NEWSAPI_URL, params=params)
+        response_json = response.json()
+        
+        # TODO branch based on 'status' field of response
+        page_articles = response_json.get('articles')
+        if (page_articles == None):
+            break
+        
+        articles.extend(page_articles)
+        page_count = page_count + 1
+
+    return articles
 
 
 def init_tweety():
