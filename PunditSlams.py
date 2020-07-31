@@ -7,7 +7,7 @@ NEWSAPI_URL = 'https://newsapi.org/v2/everything'
 
 def articles(query, *, start_date, api_key, sort_by='popularity'):
     params = {
-        'q': query,
+        'qInTitle': query,
         'from': start_date,
         'sortBy': sort_by,
         'apiKey': api_key
