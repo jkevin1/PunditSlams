@@ -18,14 +18,10 @@ def articles(query, *, start_date, api_key, sort_by='popularity'):
     return response_json.get('articles')
 
 
-if __name__ == '__main__':
-    slam_articles = articles('slams', start_date='2020-07-28', api_key=api_keys.newsapi)
-    for article in slam_articles:
-        print(article["title"])
-
+def init_tweety():
     # Authenticate to Twitter
-    auth = tweepy.OAuthHandler(api_keys.twitter_auth_a, api_keys.twitter_auth_b)
-    auth.set_access_token(api_keys.twitter_access_a, api_keys.twitter_access_b)
+    auth = tweepy.OAuthHandler(api_keys.twitter["CONSUMER_KEY"], api_keys.twitter["CONSUMER_KEY"])
+    auth.set_access_token(api_keys.twitter["CONSUMER_KEY"], api_keys.twitter["CONSUMER_KEY"])
 
     # Create API object
     api = tweepy.API(auth)
@@ -36,5 +32,14 @@ if __name__ == '__main__':
     except:
         print("Error during authentication")
 
+    return api
+
+
+if __name__ == '__main__':
+    slam_articles = articles('slams', start_date='2020-07-28', api_key=api_keys.newsapi["KEY"])
+    for article in slam_articles:
+        print(article["title"])
+
+    tweety = init_tweety()
     # Create a tweet
-    #api.update_status("Hello Tweepy")
+    #tweety.update_status("Hello Tweepy")
