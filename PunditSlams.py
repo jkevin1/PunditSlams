@@ -47,8 +47,7 @@ if __name__ == '__main__':
 
     while(True):
         today = date.today()
-        slam_articles = articles(
-            'slams', start_date=today, api_key=os.getenv("NEWSAPI_KEY"))
+        slam_articles = articles('slams', start_date=today, api_key=os.getenv("NEWSAPI_KEY"))
         for article in slam_articles:
             print(article["title"])
             # Create a tweet
