@@ -12,7 +12,7 @@ NEWSAPI_URL = 'https://newsapi.org/v2/everything'
 
 
 # See 'Request Parameters' section https://newsapi.org/docs/endpoints/everything
-def articles(query, *, start_date, api_key, sort_by='popularity', language='en'):
+def articles(query, *, start_date, api_key, sort_by='popularity', language='en', end_date=None):
 
     articles = []
     page_count = 1
@@ -28,6 +28,7 @@ def articles(query, *, start_date, api_key, sort_by='popularity', language='en')
         params = {
             'qInTitle': query,
             'from': start_date,
+            'to': end_date if end_date else date.today().isoformat(),
             'language': language,
             'sortBy': sort_by,
             'page': page_count,
