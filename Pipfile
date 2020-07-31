@@ -19,6 +19,7 @@ PySocks = "==1.7.1"
 python-dotenv = "*"
 autopep8 = "*"
 pylint = "*"
+sqlalchemy = "*"
 
 [requires]
 python_version = "3.8"
