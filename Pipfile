@@ -17,6 +17,8 @@ tweepy = "==3.9.0"
 urllib3 = "==1.25.10"
 PySocks = "==1.7.1"
 python-dotenv = "*"
+autopep8 = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.8"
