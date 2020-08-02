@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from datetime import date
 from time import sleep
 
+from log import *
+
 load_dotenv()
 
 NEWSAPI_URL = 'https://newsapi.org/v2/everything'
@@ -37,13 +39,16 @@ def articles(query, *, start_date, api_key, sort_by='popularity', language='en',
         response = requests.get(NEWSAPI_URL, params=params)
         response_json = response.json()
 
-        # TODO branch based on 'status' field of response
-        page_articles = response_json.get('articles')
-        if (page_articles == None or len(page_articles) == 0):
+        if response_json.get('status') == 'ok':
+            page_articles = response_json.get('articles')
+            if (page_articles == None or len(page_articles) == 0):
+                break
+            
+            articles.extend(page_articles)
+            page_count = page_count + 1
+        else:
+            log_error("NewsAPI response: '{msg}'", msg=response_json.get('message'))
             break
-
-        articles.extend(page_articles)
-        page_count = page_count + 1
 
     return articles
 
