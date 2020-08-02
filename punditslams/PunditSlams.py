@@ -1,9 +1,10 @@
 import tweepy
 import requests
 import os
+import math
 from dotenv import load_dotenv
 
-from datetime import date
+from datetime import datetime
 from time import sleep
 
 from log import *
@@ -72,14 +73,36 @@ def init_tweety():
     return api
 
 
+# Returns the current time, truncated to 15 minute intervals
+def gettime_truncated():
+    curr_time = datetime.utcnow()
+    minutes = math.floor(curr_time.minute / 15) * 15
+    return curr_time.replace(minute=minutes, second=0, microsecond=0)
+
+
 if __name__ == '__main__':
     tweety = init_tweety()
 
+    last_time = gettime_truncated()
+    log_info("First time interval: {time}", time=last_time.isoformat())
+
     while(True):
-        today = date.today()
-        slam_articles = articles('slams', start_date=today, api_key=os.getenv("NEWSAPI_KEY"))
-        for article in slam_articles:
-            print(article["title"])
+        curr_time = gettime_truncated()
+        if last_time < curr_time:
+            # there should be at least 15 minutes difference, since times are truncated
+            log_info("Time interval: {t0} -> {t1}", t0=last_time.isoformat(), t1=curr_time.isoformat())
+            
+            # Query articles in the time interval
+            start = last_time.isoformat()
+            end = curr_time.isoformat()
+            #slam_articles = articles('slams', start_date=start, end_date=end, api_key=os.getenv("NEWSAPI_KEY"))
+            #for article in slam_articles:
+            #    print(article["title"])
+
+            # get ready for the next interval
+            last_time = curr_time
+
+
 
         # Create a tweet
         # tweety.update_status("Hello Tweepy")
