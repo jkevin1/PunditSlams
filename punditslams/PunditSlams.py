@@ -95,9 +95,10 @@ if __name__ == '__main__':
             # Query articles in the time interval
             start = last_time.isoformat()
             end = curr_time.isoformat()
-            #slam_articles = articles('slams', start_date=start, end_date=end, api_key=os.getenv("NEWSAPI_KEY"))
-            #for article in slam_articles:
-            #    print(article["title"])
+            slam_articles = articles('slams', start_date=start, end_date=end, api_key=os.getenv("NEWSAPI_KEY"))
+            for article in slam_articles:
+                tweety.update_status(article["title"] + '\n' + article["url"])
+                log_info("Tweet:\n{msg}", msg=article["title"] + '\n' + article["url"])
 
             # get ready for the next interval
             last_time = curr_time
