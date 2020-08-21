@@ -1,12 +1,12 @@
 import tweepy
 import requests
 import os
-from dotenv import load_dotenv
 
 from datetime import date
 from time import sleep
 
-load_dotenv()
+from auth import auth
+from models import Article
 
 NEWSAPI_URL = 'https://newsapi.org/v2/everything'
 
@@ -47,34 +47,29 @@ def articles(query, *, start_date, api_key, sort_by='popularity', language='en')
     return articles
 
 
-def init_tweety():
-    # Authenticate to Twitter
-    auth = tweepy.OAuthHandler(
-        os.getenv("API_KEY"), os.getenv("API_SECRET_KEY"))
-    auth.set_access_token(os.getenv("ACCESS_TOKEN"),
-                          os.getenv("ACCESS_TOKEN_SECRET"))
-
+def init_app():
     # Create API object
-    api = tweepy.API(auth)
+    app = tweepy.API(auth)
 
     try:
-        api.verify_credentials()
+        app.verify_credentials()
         print("Authentication OK")
     except:
         print("Error during authentication")
 
-    return api
+    return app
 
 
 if __name__ == '__main__':
-    tweety = init_tweety()
+    app = init_app()
 
     while(True):
         today = date.today()
         slam_articles = articles('slams', start_date=today, api_key=os.getenv("NEWSAPI_KEY"))
         for article in slam_articles:
-            print(article["title"])
+            title, url = article['title'], article['url']
+            Article.create(title=title, url=url)
 
         # Create a tweet
-        # tweety.update_status("Hello Tweepy")
+        # app.update_status('test')
         sleep(30)  # Check every 30 seconds
