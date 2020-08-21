@@ -9,7 +9,8 @@ requests-oauthlib==1.3.0
 six==1.15.0
 tweepy==3.9.0
 urllib3==1.25.10
-sqlalchemy = "*"
+sqlalchemy==1.3.19
+termcolor==1.1.0
 
 # Dev
 wheel

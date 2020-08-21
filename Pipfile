@@ -20,6 +20,7 @@ python-dotenv = "*"
 autopep8 = "*"
 pylint = "*"
 sqlalchemy = "*"
+termcolor = "*"
 
 [requires]
 python_version = "3.8"

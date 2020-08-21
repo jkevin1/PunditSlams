@@ -2,14 +2,13 @@ import tweepy
 import requests
 import os
 import math
-from dotenv import load_dotenv
 
 from datetime import datetime
 from time import sleep
 
+from auth import auth
+from models import Article
 from log import *
-
-load_dotenv()
 
 NEWSAPI_URL = 'https://newsapi.org/v2/everything'
 
@@ -44,7 +43,7 @@ def articles(query, *, start_date, api_key, sort_by='popularity', language='en',
             page_articles = response_json.get('articles')
             if (page_articles == None or len(page_articles) == 0):
                 break
-            
+
             articles.extend(page_articles)
             page_count = page_count + 1
         else:
@@ -54,23 +53,17 @@ def articles(query, *, start_date, api_key, sort_by='popularity', language='en',
     return articles
 
 
-def init_tweety():
-    # Authenticate to Twitter
-    auth = tweepy.OAuthHandler(
-        os.getenv("API_KEY"), os.getenv("API_SECRET_KEY"))
-    auth.set_access_token(os.getenv("ACCESS_TOKEN"),
-                          os.getenv("ACCESS_TOKEN_SECRET"))
-
+def init_app():
     # Create API object
-    api = tweepy.API(auth)
+    app = tweepy.API(auth)
 
     try:
-        api.verify_credentials()
+        app.verify_credentials()
         print("Authentication OK")
     except:
         print("Error during authentication")
 
-    return api
+    return app
 
 
 # Returns the current time, truncated to 15 minute intervals
@@ -81,7 +74,7 @@ def gettime_truncated():
 
 
 if __name__ == '__main__':
-    tweety = init_tweety()
+    app = init_app()
 
     last_time = gettime_truncated()
     log_info("First time interval: {time}", time=last_time.isoformat())
@@ -90,21 +83,23 @@ if __name__ == '__main__':
         curr_time = gettime_truncated()
         if last_time < curr_time:
             # there should be at least 15 minutes difference, since times are truncated
-            log_info("Time interval: {t0} -> {t1}", t0=last_time.isoformat(), t1=curr_time.isoformat())
-            
+            log_info("Time interval: {t0} -> {t1}",
+                     t0=last_time.isoformat(), t1=curr_time.isoformat())
+
             # Query articles in the time interval
             start = last_time.isoformat()
             end = curr_time.isoformat()
-            slam_articles = articles('slams', start_date=start, end_date=end, api_key=os.getenv("NEWSAPI_KEY"))
+            slam_articles = articles('slams', start_date=start, end_date=end,
+                                     api_key=os.getenv("NEWSAPI_KEY"))
             for article in slam_articles:
-                tweety.update_status(article["title"] + '\n' + article["url"])
-                log_info("Tweet:\n{msg}", msg=article["title"] + '\n' + article["url"])
+                title, url = article['title'], article['url']
+                tweety.update_status(title + '\n' + url)
+                Article.create(title=title, url=url)
+                log_info("Tweet:\n{msg}", msg=title + '\n' + url)
 
             # get ready for the next interval
             last_time = curr_time
 
-
-
         # Create a tweet
-        # tweety.update_status("Hello Tweepy")
+        # app.update_status('test')
         sleep(30)  # Check every 30 seconds
