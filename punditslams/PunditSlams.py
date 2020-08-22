@@ -93,7 +93,7 @@ if __name__ == '__main__':
                                      api_key=os.getenv("NEWSAPI_KEY"))
             for article in slam_articles:
                 title, url = article['title'], article['url']
-                tweety.update_status(title + '\n' + url)
+                app.update_status(title + '\n' + url)
                 Article.create(title=title, url=url)
                 log_info("Tweet:\n{msg}", msg=title + '\n' + url)
 
